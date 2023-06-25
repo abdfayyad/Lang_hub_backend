@@ -15,18 +15,23 @@ class CourseTeacherController extends Controller
 		$imageUrl = "public/tourism/course-images/$imageName";
 		return $imageUrl;
 	}
+
 	// return all the courses
 	public function index() {
 		$teacher = Teacher::where('user_id', auth()->id())->first();
 		$courses = $teacher->courses()->get();
 		return response()->json([
+			'status' => 200,
+			'message' => 'done succeefully',
 			'courses' => $courses
 		]);
 	}
 	// show specific course
 	public function show(Course $course) {
 		return response()->json([
-			'course' => $course->with('teachers')->first()
+			'status' => 200,
+			'message' => 'done succeefully',
+			'course' => $course->first()
 		]);
 	}
 
@@ -100,6 +105,8 @@ class CourseTeacherController extends Controller
 	public function destroy(Course $course) {
 		$course->delete();
 		return response()->json([
+			'status' => true,
+			'message' => 'done succeefully',
 			'message' => 'course deleted succfully'
 		]);
 	}

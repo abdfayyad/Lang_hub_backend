@@ -18,7 +18,7 @@ class OfferStudentController extends Controller
         ->wherePivot('approved' , true)
         ->get() ;
         return response()->json([
-            'status' => true ,
+            'status' => 200 ,
             'message' => 'done successfully',
             'data' => $offers 
         ]);
@@ -37,7 +37,7 @@ class OfferStudentController extends Controller
 			$i++ ;
 		}
 		return response()->json([
-			'status' => true,
+			'status' => 200,
 			'message'=>'done successfully',
 			'data'=>$requests 
 		]);
@@ -46,7 +46,7 @@ class OfferStudentController extends Controller
         $student = Student::where('user_id' ,auth()->id())->first() ;
         $student->offers()->detach($offer);
         return response()->json([
-            'status' => true ,
+            'status' => 200 ,
             'message' => 'delete it successfully'
         ]);
     }

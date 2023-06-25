@@ -22,14 +22,14 @@ class LessonStudentController extends Controller
        
             if ($test == null )
             return response()->json([
-                'status' =>  false ,
+                'status' =>  201 ,
                 'message' => 'your are not enrolled in this course' 
             ]);
             $lessons =  $course->lessons()
             ->with('questions')
             ->get()    ;
             return response()->json([
-                'status' => true ,
+                'status' => 200 ,
                 'message' => 'done successfully' ,
                 'data' => $lessons
             ]);

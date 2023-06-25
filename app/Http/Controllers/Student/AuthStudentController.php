@@ -29,7 +29,7 @@ class AuthStudentController extends Controller
         $token = $user->createToken('Personal Access Token')->plainTextToken;
         $user['token_type'] = 'Bearer';
         $response = response()->json([
-            'status'=>true,
+            'status'=>200,
             'massage' => 'registeration donr seccesfully',
             'data' => $student,
             'token' => $token,

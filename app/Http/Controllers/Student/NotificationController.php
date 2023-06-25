@@ -23,7 +23,7 @@ class NotificationController extends Controller
 		$student =  Student::where('user_id' , auth()->id())->first() ;
 		if(!$course->students()->where('student_id' ,$student->id)->exists()){
 			return response()->json([
-				'status'=>false ,
+				'status'=>201 ,
 				'message' => 'you are not member in this course'
 			]) ;
 		}
@@ -37,7 +37,7 @@ class NotificationController extends Controller
 			}
 		}
 		return response()->json([
-			'status' => true ,
+			'status' => 200 ,
 			'message' => ' done successfully',
 			'data' => $notification
 		]);
@@ -47,7 +47,7 @@ class NotificationController extends Controller
 		$lessonNotification->read = true ;
 		$lessonNotification->save();
 		return response()->json([
-			'status'=> true ,
+			'status'=> 200 ,
 			'message' => 'done successfully' ,
 			'data' => $lesson
 		]);
@@ -56,7 +56,7 @@ class NotificationController extends Controller
 		$student = Student::where('user_id' , auth()->id())->first();
 		$notifications = $student->academyNotifications()->latest()->get();
 		return response()->json([
-			'status'=>true,
+			'status'=>200,
 			'message' => 'done successfully' ,
 			'data' => $notifications 
 		]);
@@ -65,7 +65,7 @@ class NotificationController extends Controller
 		$student = Student::where('user_id' , auth()->id())->first()['id'] ;
 		if ($academyNotification->student_id != $student)
 		return response()->json([
-			'status' =>false ,
+			'status' =>201 ,
 			'message' => 'you cant show this notification because you are awomen'
 		]);
 		$academy = Academy::where('id' , $academyNotification->academy_id)->first();
@@ -79,7 +79,7 @@ class NotificationController extends Controller
 		$student = Student::where('user_id' , auth()->id())->first();
 		$notifications = $student->offerNotifications()->latest()->get() ;
 		return response()->json([
-			'status' => true,
+			'status' => 200,
 			'message' => 'done successfully',
 			'data' => $notifications
 			]);
@@ -88,7 +88,7 @@ class NotificationController extends Controller
 		$student = Student::where('user_id' , auth()->id())->first()['id'] ;
 		if ($offerNotification->student_id != $student)
 		return response()->json([
-			'status' => false ,
+			'status' => 201 ,
 			'message' => 'HaHaHaHaHaHa you can not show this notification maaaan'
 		]);
 		$offer = Offer::where('id' , $offerNotification->offer_id)->first();

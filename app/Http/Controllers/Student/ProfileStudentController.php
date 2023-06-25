@@ -32,7 +32,7 @@ class ProfileStudentController extends Controller
 	public function show() {
         $student = Student::where('user_id', auth()->id())->first();
 		return response()->json([
-			'status'=>true ,
+			'status'=>200 ,
 			'message'=>'login done seccusfully',
     		'student' => $student 
     	]);
@@ -49,7 +49,7 @@ class ProfileStudentController extends Controller
         $student = Student::where('user_id', auth()->id())->first();
     	$student->update($validatedData);
     	return response()->json([
-			'status'=>true ,
+			'status'=>200 ,
     		'message' => 'Profile updated successfully',
     		'student' => $student
     	]);
@@ -59,7 +59,7 @@ class ProfileStudentController extends Controller
 		$student = Student::where('user_id' ,auth()->id())->first();
 		$cerificates = $student->certificates()->get();
 		return response()->json([
-			'statuse'=>true ,
+			'statuse'=>200 ,
 			'message' => 'done successfully',
 			'data' => $cerificates
 		]);

@@ -25,7 +25,7 @@ class AcademyStudentController extends Controller
 		->with('rate')
 		->get() ;
 		$respnose = response()->json([
-			'status' => true ,
+			'status' => 200 ,
 			'message' => 'academies displayed seccussfuly' ,
 			'data' => $academies
 		] );
@@ -46,7 +46,7 @@ class AcademyStudentController extends Controller
 		}
 		$student->academies()->attach($academy) ;
 		$response = response()->json([
-			'status'=> true ,
+			'status'=> 200 ,
 			'message'=>'done successfully',
 		] );
 		return $response ;
@@ -65,7 +65,7 @@ class AcademyStudentController extends Controller
 			$i++ ;
 		}
 		return response()->json([
-			'status' => true,
+			'status' => 200,
 			'message'=>'done successfully',
 			'data'=>$requests
 		]);
@@ -74,7 +74,7 @@ class AcademyStudentController extends Controller
 		$student = Student::where('user_id' , auth()->id())->first();
 		$student->academies()->detach($academy) ;
 		return response()->json([
-			'status' => true ,
+			'status' => 200 ,
 			'message' => 'deleted seccussfuly'
 		]);
 	}
@@ -100,7 +100,7 @@ class AcademyStudentController extends Controller
 				'academy_id'=> $academy->id
 			]) ;
 			return response()->json([
-				'status' => true ,
+				'status' => 200 ,
 				'message' => 'done successfully',
 				'data' => $feedBack
 			]);
@@ -114,10 +114,10 @@ class AcademyStudentController extends Controller
         ->get();
         $academiesByLocation = Academy::where('location' , 'like' , "%$request->search_key%")
         ->get();
-        $academiesByLang = Academy::where( $request->search_key ,true)
+        $academiesByLang = Academy::where( $request->search_key, true)
         ->get();
         $responce = response()->json([
-            'status'=>true,
+            'status'=>200,
             'message'=>'done successfully',
             'academiesByName' => $academiesByName,
             'academiesByLocation'=>$academiesByLocation,

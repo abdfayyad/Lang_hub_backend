@@ -22,7 +22,7 @@ class RateController extends Controller
 		->first();
 		if ($previosRate == null){
 			return response()->json([
-				'status' => true ,
+				'status' => 200 ,
 				'message' => 'rating successfully',
 				'data' => $this->createTeacherReta($request->rate , $teacher , $student_id) 
 			]);
@@ -30,7 +30,7 @@ class RateController extends Controller
 		$previosRate['rate'] = $request->rate ;
 		$previosRate->save();
 		return response()->json([
-			'status' => true ,
+			'status' => 200 ,
 			'message' => 'rating successfully' ,
 			'data' => $previosRate 
 		]);
@@ -61,7 +61,7 @@ class RateController extends Controller
         $previosRate['rate'] = $request->rate ;
         $previosRate->save();
         return response()->json([
-            'status' => true ,
+            'status' => 200 ,
             'message' => 'rating succssfully',
             'data' => $previosRate 
         ]);

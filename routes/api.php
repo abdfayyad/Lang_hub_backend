@@ -14,12 +14,14 @@ use App\Http\Controllers\Student\GroupStudentController;
 use App\Http\Controllers\Teacher\AuthTeacherController;
 use App\Http\Controllers\Teacher\ProfileTeacherController;
 use App\Http\Controllers\Teacher\HomeTeacherController;
+use App\Http\Controllers\Teacher\CourseTeacherController;
 use App\Http\Controllers\Teacher\InstituesTeacherController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Student\NotificationController;
 use App\Http\Controllers\Student\OfferStudentController;
 use App\Http\Controllers\Student\RateController;
 
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,6 +57,10 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth:sanctum','teacher']]
         Route::post('upload-post', [ProfileTeacherController::class, 'uploadPost']);
         Route::get('my-posts', [ProfileTeacherController::class, 'myPosts']);
     });
+    Route::group(['prefix' => 'courses'], function() {
+        Route::get('/', [CourseTeacherController::class, 'index']);
+        Route::get('/{id}', [CourseTeacherController::class, 'show']);
+    });
 
     Route::group(['prefix' => 'institutes'], function() {
         Route::post('{id}/add-request', [InstituesTeacherController::class, 'store']);
@@ -76,6 +82,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:sanctum','student']]
     });//done
 
     Route::group(['prefix' => 'courses'], function() {
+        
         Route::get('/enrolled-courses', [CourseStudentController::class, 'enrolledCourses']);
         Route::get('certificate' , [ProfileStudentController::class , 'certificats']);
         Route::post('solve-exam/{exam}' , [CourseStudentController::class , 'solveExam']);
@@ -142,3 +149,5 @@ Route::get('offer/{offer}' , [GeneralController::class , 'offer']);
 Route::get('academy/{academy}' , [GeneralController::class , 'academy']);
 Route::get('teacher/{teacher}' , [GeneralController::class , 'teacher']);
 Route::post('academySearch' , [GeneralController::class , 'academySearch']);
+
+Route::post('mouaz', [HomeController::class, 'test']);

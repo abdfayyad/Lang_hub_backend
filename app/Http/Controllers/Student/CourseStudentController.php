@@ -73,7 +73,7 @@ class CourseStudentController extends Controller
 			->where('end_time', '<=', Date::now())
 			->get();
 		return response()->json([
-			'status' => true,
+			'status' => 200,
 			'message' => 'done successfully',
 			'data' => $courses
 		]);

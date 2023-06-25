@@ -25,7 +25,7 @@ class Teacher extends Model
     // The courses that belong to the Teacher
     public function courses()
     {
-        return $this->hasMany(Course::class);
+        return $this->belongsToMany(Course::class);
     }
     // Get all of the groups for the Teacher
     public function groups()

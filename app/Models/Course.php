@@ -27,7 +27,7 @@ class Course extends Model
     // The teachers that belong to the Course
     public function teachers()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsToMany(Teacher::class);
     }
     // Get all of the lessons for the Course
     public function lessons()
