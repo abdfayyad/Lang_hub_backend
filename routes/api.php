@@ -1,0 +1,144 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\Student\AuthStudentController;
+use App\Http\Controllers\Student\ProfileStudentController;
+use App\Http\Controllers\Student\CourseStudentController;
+use App\Http\Controllers\Student\AcademyStudentController;
+use App\Http\Controllers\Student\LessonStudentController;
+use App\Http\Controllers\Student\GroupStudentController;
+use App\Http\Controllers\Teacher\AuthTeacherController;
+use App\Http\Controllers\Teacher\ProfileTeacherController;
+use App\Http\Controllers\Teacher\HomeTeacherController;
+use App\Http\Controllers\Teacher\InstituesTeacherController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Student\NotificationController;
+use App\Http\Controllers\Student\OfferStudentController;
+use App\Http\Controllers\Student\RateController;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});*/
+
+Route::post('student/register',[AuthStudentController::class, 'register']);
+Route::post('teacher/register',[AuthTeacherController::class, 'register']);
+
+Route::post('/login',[LoginController::class,'login']);
+
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth:sanctum','superAdmin']], function () {
+    Route::get('/profile', [HomeTeacherController::class, 'index']);
+});
+
+Route::group(['prefix' => 'academy-admin', 'middleware' => ['auth:sanctum','academyAdmin']], function () {
+    Route::get('/', [HomeTeacherController::class, 'index']);
+});
+
+Route::group(['prefix' => 'teacher', 'middleware' => ['auth:sanctum','teacher']], function () {
+    Route::group(['prefix' => 'profile'], function() {
+        Route::get('/', [ProfileTeacherController::class, 'show']);
+        Route::post('/', [ProfileTeacherController::class, 'update']);
+        Route::post('/change-password', [ProfileTeacherController::class, 'changePassword']);
+        Route::post('upload-post', [ProfileTeacherController::class, 'uploadPost']);
+        Route::get('my-posts', [ProfileTeacherController::class, 'myPosts']);
+    });
+
+    Route::group(['prefix' => 'institutes'], function() {
+        Route::post('{id}/add-request', [InstituesTeacherController::class, 'store']);
+        Route::get('/pending-requests', [InstituesTeacherController::class, 'pendingRequests']);
+        Route::delete('{order}/cancel-request', [InstituesTeacherController::class, 'cancelRequest']);
+        Route::get('students/{course}', [InstituesTeacherController::class, 'showStudents']);
+        Route::get('courses-history', [InstituesTeacherController::class, 'coursesHistory']);
+    });
+    
+    Route::post('course/{course}/add-lesson', [InstituesTeacherController::class, 'addLesson']);
+});
+
+Route::group(['prefix' => 'student', 'middleware' => ['auth:sanctum','student']], function () {
+
+    Route::group(['prefix' => 'profile'], function() {
+        Route::get('/', [ProfileStudentController::class, 'show']);
+        Route::post('/', [ProfileStudentController::class, 'update']);
+        Route::post('/change-password', [ProfileStudentController::class, 'changePassword']);
+    });//done
+
+    Route::group(['prefix' => 'courses'], function() {
+        Route::get('/enrolled-courses', [CourseStudentController::class, 'enrolledCourses']);
+        Route::get('certificate' , [ProfileStudentController::class , 'certificats']);
+        Route::post('solve-exam/{exam}' , [CourseStudentController::class , 'solveExam']);
+        Route::group(['prefix' => '{course}/lessons'], function() {
+            Route::get('/', [LessonStudentController::class, 'lessons']);
+            Route::get('/{lesson}', [LessonStudentController::class, 'show']);
+        });
+    });
+    Route::get('search-academies', [AcademyStudentController::class, 'academySearch']);
+
+    Route::group(['prefix' => 'academies'], function() {
+        Route::get('/' , [AcademyStudentController::class , 'index']) ;
+        Route::post('join/{academy}' , [AcademyStudentController::class ,'joinToAcademy' ]) ;
+        Route::get('show-request' , [AcademyStudentController::class , 'showRequest'] ) ;
+        Route::get('cancel-request/{academyStudent}', [AcademyStudentController::class , 'delete']) ;
+        Route::post('feedback/{academy}' , [AcademyStudentController::class , 'addFeedBack']) ;
+        Route::post('rate-academy/{academy}' , [AcademyStudentController::class ,'rateAcademy' ]) ;
+        Route::post('rate-teacher/{teacher}' , [AcademyStudentController::class ,'rateTeacher' ]) ;
+    });//done
+    Route::group(['prefix' => 'rate'] , function (){
+        Route::post('/teacher/{teacher}' ,[RateController::class ,'rateTeacher' ] );
+        Route::post('/academy/{academy}' ,[RateController::class ,'rateAcademy' ] );
+    });//done
+    Route::group(['prefix' => 'notification'] , function(){
+        Route::get('/course/{course}' , [NotificationController::class , 'showCourseNotifications']);
+        Route::get('acceptAcademy' ,[NotificationController::class , 'showAcademyNotifications']);
+        Route::get('offers' , [NotificationController::class , 'showOffersNotifications']);
+        Route::get('lesson/{lessonNotification}' , [NotificationController::class , 'showLessonNotification']);
+        Route::get('/academy/{academyNotification}' , [NotificationController::class , 'showAcademyNotification']);
+        Route::get('offer/{offerNotification}' , [NotificationController::class , 'showOfferNotification']);
+    });
+
+    Route::group(['prefix' => 'offers'], function() {
+        Route::get('/' , [OfferStudentController::class , 'index']);
+        Route::get('/requests' , [OfferStudentController::class , 'showOfferRequests']);
+        Route::delete('delete-request/{offer}' ,[OfferStudentController::class,'delete']);
+
+    });
+
+
+    Route::group(['prefix' => 'groups'], function() {
+        Route::get('/', [GroupStudentController::class, 'index']);
+        Route::get('/{group}', [GroupStudentController::class, 'show']);
+        Route::post('{group}/join', [GroupStudentController::class, 'joinGroup']);
+        Route::post('{group}/leave', [GroupStudentController::class, 'leaveGroup']);
+        Route::post('{group}/send-message', [GroupStudentController::class, 'sendMessage']);
+        Route::get('{group}/all-messages', [GroupStudentController::class, 'showMessages']);
+        Route::post('{group}/delete-message', [GroupStudentController::class, 'deleteMessage']);
+    });
+
+    Route::group(['prefix' => 'academy'], function() {
+        Route::get('/all' , [AcademyStudentController::class , 'index']) ;//done Edit
+        Route::get('{academy}/allcourses', [AcademyStudentController::class, 'allAcademyCourses']);//done
+        Route::get('/{academy}', [AcademyStudentController::class, 'show']);//done Edit
+        Route::post('rate/{academy}' , [AcademyStudentController::class , 'rate']) ;//done add
+    });
+});
+//route that access to all
+Route::get('academies' ,[GeneralController::class , 'academies']);
+Route::get('courses' , [GeneralController::class , 'courses']);
+Route::get('courses/{academy}' , [GeneralController::class , 'courseInAcademy']);
+Route::get('offers' , [GeneralController::class , 'offers']);
+Route::get('offer/{offer}' , [GeneralController::class , 'offer']);
+Route::get('academy/{academy}' , [GeneralController::class , 'academy']);
+Route::get('teacher/{teacher}' , [GeneralController::class , 'teacher']);
+Route::post('academySearch' , [GeneralController::class , 'academySearch']);
