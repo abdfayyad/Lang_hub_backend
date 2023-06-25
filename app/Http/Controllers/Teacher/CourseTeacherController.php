@@ -105,7 +105,7 @@ class CourseTeacherController extends Controller
 	public function destroy(Course $course) {
 		$course->delete();
 		return response()->json([
-			'status' => true,
+			'status' => 200,
 			'message' => 'done succeefully',
 			'message' => 'course deleted succfully'
 		]);

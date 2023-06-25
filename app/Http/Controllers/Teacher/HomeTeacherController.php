@@ -42,7 +42,7 @@ class HomeTeacherController extends Controller
         $academiesByLang = Academy::where( $request->search_key ,true)
         ->get();
         $responce = response()->json([
-            'status'=>true,
+            'status'=>200,
             'message'=>'done successfully',
             'academiesByName' => $academiesByName,
             'academiesByLocation'=>$academiesByLocation,
