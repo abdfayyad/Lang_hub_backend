@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -16,54 +18,17 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+    
+    
         DB::table('users')->insert(
         [
-            'email' => 'mouaz@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'email' => 'kassemStudent@gmail.com',
+            'password' => Hash::make('123456789'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
-            'role_id' => 1
+            'role_id' => 4
         ]);
-        DB::table('users')->insert(
-        [
-            'email' => 'nour@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'role_id' => 1
-        ]);
-        DB::table('users')->insert(
-        [
-            'email' => 'abd@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'role_id' => 3
-        ]);
-        DB::table('users')->insert(
-        [
-            'email' => 'kassem@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'role_id' => 3
-        ]);
-        DB::table('users')->insert(
-        [
-            'email' => 'lougain@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'role_id' => 2
-        ]);
-        DB::table('users')->insert(
-        [
-            'email' => 'taha@gmail.com',
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'role_id' => 2
-        ]);
+        
 
         // $users = User::factory()
         // ->count(10)

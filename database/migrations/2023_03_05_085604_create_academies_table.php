@@ -23,6 +23,7 @@ class CreateAcademiesTable extends Migration
             $table->boolean('germany');
             $table->boolean('spanish');
             $table->boolean('french');
+            $table->string('image')->nullable();
             $table->integer('delete_time')->default(4);
             $table->foreignId('adminstrator_id')->constrained('academy_adminstrators')->cascadeOnDelete();
             $table->timestamps();

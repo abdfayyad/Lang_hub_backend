@@ -24,6 +24,7 @@ class AcademyFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->sentence(13),
             'location' => $this->faker->city,
+            'image' => $this->faker->imageUrl,
             'license_number' => random_int(0,9999),
             'english'=>  random_int(0,1) == 1 ? true : false ,
             'french'=> random_int(0,1) == 1 ? true : false ,

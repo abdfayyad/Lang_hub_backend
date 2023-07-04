@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Certificate;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\CourseStudent;
 use App\Models\Exam;
+use App\Models\Offer;
 use App\Models\Question;
 use App\Models\Student;
 use Illuminate\Notifications\Notification;
@@ -51,12 +53,27 @@ class CourseStudentController extends Controller
 	{
 		$student = Student::where('user_id', auth()->id())->first();
 		$courses = $student->courses()
-			->with('teachers')
+			->with('teacher:id,first_name,last_name')
+			->with('academy:id,name')
+			->with('annualSchedules')
 			->get();
+		foreach($courses as $course){
+			$course['is_offer'] = false ;
+		}
+		$offers = $student->offers()
+		->wherePivot('approved' , 1)
+		->with('teacher:id,first_name,last_name')
+		->with('academy:id,name')
+		->with('annualSchedules')
+		->get();
+		foreach($offers as $offer){
+			$offer['is_offer'] = true ;
+		}
+		$combinedList = $courses->merge($offers);
 		return response()->json([
 			'status' => 200,
 			'message' => 'success',
-			'data' => $courses
+			'data' => $combinedList->all()
 		]);
 	}
 	//Cancel a student's enrollment in a course
@@ -78,13 +95,18 @@ class CourseStudentController extends Controller
 			'data' => $courses
 		]);
 	}
-	public function solveExam(Request $request, Exam $exam)
-	{
+	public function solveExam(Request $request, Course $course)
+	{	
+		$student = Student::where('user_id' , auth()->id())->first();
+		if (!$student->courses()->wherePivot('course_id' , $course->id)->exists())
+		return response()->json([
+			'status' => 400 ,
+			'message' => 'you did not enrolled in this course'
+		]);
+		$exam = $course->exams()->first();
 		$questions = $exam->questions()->get();
-		$quesionMark = 100 / sizeof($questions);
-		$collect = collect($request);
-		return count($collect);
-
+		
+		$quesionMark = 100 / sizeof($questions);		
 		$i = 1;
 		$mark = 0;
 		foreach ($questions as $q) {
@@ -92,8 +114,25 @@ class CourseStudentController extends Controller
 				$mark += $quesionMark;
 			$i++;
 		}
-
-		return $mark;
+		
+		$student->courses()->detach($course->id);
+		$academy = $course->academy()->first();
+		if ($mark >= 50)
+		Certificate::create([
+			'student_name' => "$student->firest_name . $student->last_name",
+			'academy_name' => $academy->name ,
+			'mark' => $mark ,
+			'course_level' => $course['name'] ,
+			'image' => $course->course_image ,
+			'receive_date' => now()
+		]);
+		if ($mark<50)
+		$message = " sorry you failed in this exams and your mark is $mark ";
+		else $message = "good luck you passed this exam and your mark is $mark now you can show your certicficate in your profile" ;
+		return response()->json([
+			'status' => 200 ,
+			'message' => $message 
+		]);
 	}
 
 }

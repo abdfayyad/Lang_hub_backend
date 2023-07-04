@@ -4,20 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Course;
-class AnnualSchedule extends Model
+
+class OfferAnnualScadual extends Model
 {
     use HasFactory;
-    protected $table = 'annual_schedules';
+    protected $table = 'offer_annual_scaduals';
 
     protected $fillable = [
         'start_hour', 'end_hour', 'day', 'start_date',
-        'end_date', 'course_id'
+        'end_date', 'offer_id'
     ];
     protected $hidden = [
-        'created_at' , 'updated_at' , 'start_date' , 'end_date' ,'id' , 'course_id'
+        'created_at' , 'updated_at' , 'start_date' , 'end_date' ,'id' , 'offer_id'
     ];
     public function course() {
         return $this->belongsTo(Course::class);
+    }
+    public function offer(){
+        return $this->belongsTo(Offer::class);
     }
 }

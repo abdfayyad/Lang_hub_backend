@@ -24,7 +24,8 @@ class OfferStudentController extends Controller
         ]);
     }
     public function showOfferRequests(){
-        $student_id = Student::where('user_id' , auth()->id())->first()['id'];
+        $student =  Student::where('user_id' , auth()->id())->first();
+        $student_id = $student['id'];
 		$requests = OfferStudent::where('student_id' , $student_id)->get();
 		$i = 0 ;
 		foreach($requests as $request){
@@ -36,10 +37,11 @@ class OfferStudentController extends Controller
 			}
 			$i++ ;
 		}
+        $offers = $student->offers()->wherePivot('approved' , false)->get();
 		return response()->json([
 			'status' => 200,
 			'message'=>'done successfully',
-			'data'=>$requests 
+			'data'=>$offers
 		]);
     }
     public function delete(Offer $offer){
@@ -49,5 +51,48 @@ class OfferStudentController extends Controller
             'status' => 200 ,
             'message' => 'delete it successfully'
         ]);
+    }
+    public function enrollToOffer(Offer $offer){
+        $student = Student::where('user_id' , auth()->id())->first();
+        OfferStudent::create([
+            'student_id' => $student->id ,
+            'offer_id' => $offer->id ,
+            'approved' => 0 
+        ]);
+        return response()->json([
+            'status' => 200 ,
+            'message' => 'done successfully'
+        ]);
+    }
+    public function tenOffers(){
+        $student = Student::where('user_id' , auth() -> id())->first() ;
+        $academies =  $student->academies()->wherePivot('approved' ,true)->get();
+        $offers = $academies[0]->offers()->get() ;
+        $count =  count($academies) ;
+        $i = 1;
+        while($i <$count ){
+            $offers = $offers->merge( $academies[$i]->offers()->get() ) ;
+            if (count($offers) >=10)
+            break ;
+            $i++ ;
+        }
+        if ( count($offers) > 10){
+            $data[0] = $offers[0] ;
+            for($l = 1; $l<10 ;$l++){
+                $data[$i] = $offers[$i];
+            }
+       return response()->json([
+            'status' => 200 ,
+            'message' => 'done ' ,
+            'data' => $data
+        ]) ;
+       }else {
+        return response()->json([
+            'status' => 200 ,
+            'message' => 'done 1' ,
+            'data' => $offers
+        ]) ;
+       }
+
     }
 }

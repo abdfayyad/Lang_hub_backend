@@ -25,7 +25,7 @@ class Teacher extends Model
     // The courses that belong to the Teacher
     public function courses()
     {
-        return $this->belongsToMany(Course::class);
+        return $this->hasMany(Course::class);
     }
     // Get all of the groups for the Teacher
     public function groups()
@@ -36,5 +36,8 @@ class Teacher extends Model
     public function posts()
     {
         return $this->hasMany(TeacherPost::class);
+    }
+    public function offers(){
+        return $this->hasMany(Offer::class);
     }
 }

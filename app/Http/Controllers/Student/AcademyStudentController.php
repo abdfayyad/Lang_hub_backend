@@ -13,6 +13,7 @@ use App\Models\RateTeacher;
 use App\Models\Student;
 use App\Models\Teacher;
 use Carbon\Carbon;
+use Database\Seeders\AcademySeeder;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -22,8 +23,21 @@ class AcademyStudentController extends Controller
 		$student =  Student::where('user_id' , auth()->id())->first() ;
 		$academies = $student->academies()
 		->wherePivot('approved' , 1)
-		->with('rate')
 		->get() ;
+		$i = 0 ;
+		foreach($academies as $academy){
+			$raties = AcademyStudent::where('academy_id' , $academy->id)
+			->where('approved' , true)
+			->get();
+			$finalRate = 0 ;
+			$finalCountRate = 0 ;
+			foreach($raties as $rate){
+				$finalRate +=  $rate['rate'];
+				$finalCountRate++;
+			}
+			$academies[$i]['rate'] = $finalRate / $finalCountRate;
+			$i++ ;
+		}
 		$respnose = response()->json([
 			'status' => 200 ,
 			'message' => 'academies displayed seccussfuly' ,
@@ -57,11 +71,13 @@ class AcademyStudentController extends Controller
 		$requests = AcademyStudent::where('student_id' , $student_id)->get();
 		$i = 0 ;
 		foreach($requests as $request){
+			
 			$academyTime = Academy::where('id' , $request->academy_id)->first()['delet_time'] ;
 			if (now()->greaterThan( $request['created_at']->addDays($academyTime))){
 				$request->delete() ;
 				unset($requests[$i]);
 			}
+			$request->load('academy');
 			$i++ ;
 		}
 		return response()->json([
@@ -114,14 +130,48 @@ class AcademyStudentController extends Controller
         ->get();
         $academiesByLocation = Academy::where('location' , 'like' , "%$request->search_key%")
         ->get();
+		
+		if ($request->search_key == 'english' ||
+		$request->search_key == 'french' ||
+		$request->search_key == 'spanish' ||
+		$request->search_key == 'germany' ) 
         $academiesByLang = Academy::where( $request->search_key, true)
         ->get();
-        $responce = response()->json([
+		else $academiesByLang = Academy::find(1)->get() ;
+		
+		$data = $academiesByName->merge($academiesByLocation);
+		$finalData = $data->merge($academiesByLang) ;
+		
+        $response = response()->json([
             'status'=>200,
             'message'=>'done successfully',
-            'academiesByName' => $academiesByName,
-            'academiesByLocation'=>$academiesByLocation,
-            'academiesByLang'=>$academiesByLang
+            'data' => $finalData
         ]);
+		return $response ;
     }
+	public function academy(Academy $academy){
+		
+		$raties = AcademyStudent::where('academy_id' , $academy->id)
+			->where('approved' , true)
+			->get();
+			$finalRate = 0 ;
+			$finalCountRate = 0 ;
+			foreach($raties as $rate){
+				$finalRate +=  $rate['rate'];
+				$finalCountRate++;
+			}
+			if ($finalCountRate == 0)
+			$academy['rate'] = 0 ;
+			else 
+			$academy['rate'] = $finalRate / $finalCountRate;
+			$student_id = Student::where('user_id' , auth()->id())->first()['id'];
+			$academy['my_rate']= AcademyStudent::where('academy_id' , $academy->id)
+			->where('student_id' , $student_id)->first()['rate'] ;
+			return response()->json([
+				'status' => 200 ,
+				'message' => 'done',
+				'data'=>$academy
+			]);
+
+	}
 }

@@ -15,6 +15,13 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('students')->insert([
+           'first_name' => 'kassem' ,
+           'last_name' => 'ghotani',
+           'phone_number' => '0998085197',
+           'photo' => 'sssssss',
+           'user_id' => 1 
+        ]);
         $students = Student::factory()->count(10)->create();
 
     }

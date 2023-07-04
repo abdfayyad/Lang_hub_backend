@@ -33,6 +33,7 @@ class AuthStudentController extends Controller
             'massage' => 'registeration donr seccesfully',
             'data' => $student,
             'token' => $token,
+            'role'=>'student'
         ]);
         return $response;
     }

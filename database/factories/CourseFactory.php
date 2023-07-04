@@ -23,7 +23,7 @@ class CourseFactory extends Factory
 
         $levelKey = array_rand($levels);
         return [
-            'title' => $levels[$levelKey],
+            'name' => $levels[$levelKey],
             'price' => 180_000,
             'hours' => random_int(3,6),
             'course_image' => $this->faker->imageUrl,

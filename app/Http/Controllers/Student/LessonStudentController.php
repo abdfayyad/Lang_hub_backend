@@ -26,7 +26,6 @@ class LessonStudentController extends Controller
                 'message' => 'your are not enrolled in this course' 
             ]);
             $lessons =  $course->lessons()
-            ->with('questions')
             ->get()    ;
             return response()->json([
                 'status' => 200 ,

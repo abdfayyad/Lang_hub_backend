@@ -16,7 +16,7 @@ class Academy extends Model
 
     protected $fillable = [
         'name', 'description', 'approved', 'location', 'license_number',
-        'adminstrator_id'
+        'adminstrator_id' , 'image'
     ];
     public function rate(){
         return $this->belongsTo(Rate::class);

@@ -31,6 +31,7 @@ class AuthTeacherController extends Controller
         $response = [
             'teacher' => $teacher,
             'token' => $token,
+            'role'=>'teacher'
         ];
         return response($response, 200);
     }

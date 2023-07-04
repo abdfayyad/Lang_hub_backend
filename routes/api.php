@@ -22,6 +22,8 @@ use App\Http\Controllers\Student\OfferStudentController;
 use App\Http\Controllers\Student\RateController;
 
 use App\Http\Controllers\HomeController;
+use App\Models\OfferStudent;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -85,17 +87,18 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:sanctum','student']]
         
         Route::get('/enrolled-courses', [CourseStudentController::class, 'enrolledCourses']);
         Route::get('certificate' , [ProfileStudentController::class , 'certificats']);
-        Route::post('solve-exam/{exam}' , [CourseStudentController::class , 'solveExam']);
+        Route::post('solve-exam/{course}' , [CourseStudentController::class , 'solveExam']);
         Route::group(['prefix' => '{course}/lessons'], function() {
             Route::get('/', [LessonStudentController::class, 'lessons']);
             Route::get('/{lesson}', [LessonStudentController::class, 'show']);
         });
     });
-    Route::get('search-academies', [AcademyStudentController::class, 'academySearch']);
+    
 
     Route::group(['prefix' => 'academies'], function() {
         Route::get('/' , [AcademyStudentController::class , 'index']) ;
         Route::post('join/{academy}' , [AcademyStudentController::class ,'joinToAcademy' ]) ;
+        Route::get('show/{academy}' , [AcademyStudentController::class , 'academy']);
         Route::get('show-request' , [AcademyStudentController::class , 'showRequest'] ) ;
         Route::get('cancel-request/{academyStudent}', [AcademyStudentController::class , 'delete']) ;
         Route::post('feedback/{academy}' , [AcademyStudentController::class , 'addFeedBack']) ;
@@ -118,8 +121,9 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:sanctum','student']]
     Route::group(['prefix' => 'offers'], function() {
         Route::get('/' , [OfferStudentController::class , 'index']);
         Route::get('/requests' , [OfferStudentController::class , 'showOfferRequests']);
+        Route::get('/enroll/{offer}' , [OfferStudentController::class , 'enrollToOffer']);
         Route::delete('delete-request/{offer}' ,[OfferStudentController::class,'delete']);
-
+        Route::get('ten' , [OfferStudentController::class , 'tenOffers']);
     });
 
 
@@ -149,5 +153,5 @@ Route::get('offer/{offer}' , [GeneralController::class , 'offer']);
 Route::get('academy/{academy}' , [GeneralController::class , 'academy']);
 Route::get('teacher/{teacher}' , [GeneralController::class , 'teacher']);
 Route::post('academySearch' , [GeneralController::class , 'academySearch']);
-
+Route::get('search-academies', [AcademyStudentController::class, 'academySearch']);
 Route::post('mouaz', [HomeController::class, 'test']);

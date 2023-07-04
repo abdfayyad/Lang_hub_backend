@@ -21,6 +21,9 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('description');
+            $table->string('image')->nullable();
+            $table->integer('seats')->default(0);
+            $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
             $table->foreignId('academy_id')->constrained('academies')->cascadeOnDelete();
             $table->timestamps();
         });

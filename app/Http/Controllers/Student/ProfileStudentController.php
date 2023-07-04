@@ -31,6 +31,7 @@ class ProfileStudentController extends Controller
     //Show a student's profile
 	public function show() {
         $student = Student::where('user_id', auth()->id())->first();
+		$student['email'] = User::where('id' , auth()->id())->first()['email'] ;
 		return response()->json([
 			'status'=>200 ,
 			'message'=>'login done seccusfully',

@@ -43,6 +43,7 @@ class OfferFactory extends Factory
             'academy_id' => function(){
                 return Academy::factory()->create()->id ;
             },
+            'teacher_id' => rand(1,10) ,
         ];
     }
 }

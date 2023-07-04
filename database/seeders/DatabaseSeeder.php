@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             RoleSeeder::class,
+            UserSeeder::class,
             AcademySeeder::class,
             AcademyPhotoSeeder::class,
             StudentSeeder::class,
@@ -46,12 +47,15 @@ class DatabaseSeeder extends Seeder
             GroupSeeder::class,
             LessonSeeder::class,
             OfferSeeder::class,
+            OfferStudentSeeder::class,
             QuestionSeeder::class,
             SuperAdminSeeder::class,
             TeacherScheduleSeeder::class,
             LessonNotificationSeeder::class,
             AcademyNotificationSeeder::class,
-            OfferNotificationSeeder::class
+            OfferNotificationSeeder::class,
+            CourseStudentSeeder::class,
+            OfferAnnualScadualSeeder::class
             
         ]);
     }
