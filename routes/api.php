@@ -61,7 +61,10 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth:sanctum','teacher']]
     });
     Route::group(['prefix' => 'courses'], function() {
         Route::get('/', [CourseTeacherController::class, 'index']);
-        Route::get('/{id}', [CourseTeacherController::class, 'show']);
+        Route::get('/{course}', [CourseTeacherController::class, 'show']);
+
+        Route::post('/{course}/add-lesson', [InstituesTeacherController::class, 'addLesson']);
+        Route::get('/{course}/show-lessons', [InstituesTeacherController::class, 'showLessons']);
     });
 
     Route::group(['prefix' => 'institutes'], function() {
@@ -71,8 +74,6 @@ Route::group(['prefix' => 'teacher', 'middleware' => ['auth:sanctum','teacher']]
         Route::get('students/{course}', [InstituesTeacherController::class, 'showStudents']);
         Route::get('courses-history', [InstituesTeacherController::class, 'coursesHistory']);
     });
-    
-    Route::post('course/{course}/add-lesson', [InstituesTeacherController::class, 'addLesson']);
 });
 
 Route::group(['prefix' => 'student', 'middleware' => ['auth:sanctum','student']], function () {

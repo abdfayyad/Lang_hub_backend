@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Student\RateController;
 use Illuminate\Http\Request;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileTeacherController extends Controller
@@ -40,6 +41,7 @@ class ProfileTeacherController extends Controller
     //Show a student's profile
 	public function show() {
 		$teacher = Teacher::where('user_id', auth()->id())->first();
+		$teacher['email'] = User::where('id' , auth()->id())->first()['email'];
         $teacher['rate'] = RateController::getTeacherRate($teacher);
     	return response()->json([
     		'teacher info' => $teacher
@@ -73,7 +75,7 @@ class ProfileTeacherController extends Controller
         ]);
         return response()->json([
             'status' => 200,
-            'message' => 'success',
+            'message' => 'add post successfully',
             'data' => $post
         ]);
     }

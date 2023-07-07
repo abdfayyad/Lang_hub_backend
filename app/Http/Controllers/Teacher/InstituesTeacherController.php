@@ -26,26 +26,23 @@ class InstituesTeacherController extends Controller
     }
 
     public function store($id, Request $request) {
-        $request->validate([
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'day' => 'required'
-        ]);
         $t_id = Teacher::where('user_id', auth()->id())->first();
+        $condition = AcademyTeacher::where('teacher_id', $t_id->id)
+        ->where('approved', 0)
+        ->get();
+        if (count($condition) !== 0)
+            return response()->json([
+                'status' => 200,
+                'message' => 'you already request this academy',
+                'data' => null
+        ]);
+
         $order = AcademyTeacher::query()->create([
             'teacher_id' => $t_id->id,
             'academy_id' => $id
         ]);
-        $i = 0;
-        foreach ($request->start_time as $r) {
-            TeacherSchedule::create([
-                'start_time' => $request->start_time[$i],
-                'end_time' => $request->end_time[$i],
-                'day' => $request->day[$i],
-                'academy_teacher_id' => $order->id,
-            ]);
-            $i++;
-        }
+
+        $order = TeacherSchedule::create($request->all() + ['academy_teacher_id' => $order->id]);
         return response()->json([
             'status' => 200,
             'message' => 'successful',
@@ -124,6 +121,16 @@ class InstituesTeacherController extends Controller
             'status' => 200,
             'message' => 'successful',
             'data' => $allCourses,
+        ]);
+    }
+
+    public function showLessons(Course $course) {
+        $lessons = $course->lessons()->get();
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'successful',
+            'data' => $lessons,
         ]);
     }
 }

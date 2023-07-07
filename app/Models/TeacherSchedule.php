@@ -10,7 +10,14 @@ class TeacherSchedule extends Model
     use HasFactory;
     protected $table = 'teacher_schedule';
     protected $fillable = [
-        'day', 'start_time', 'end_time', 'academy_teacher_id'
+        'saturday', 'start_saturday', 'end_saturday',
+        'sunday', 'start_sunday', 'end_sunday',
+        'monday', 'start_monday', 'end_monday',
+        'tuesday', 'start_tuesday', 'end_tuesday',
+        'wednsday', 'start_wednsday', 'end_wednsday',
+        'thursday', 'start_thursday', 'end_thursday',
+        'friday', 'start_friday', 'end_friday',
+        'academy_teacher_id'
     ];
     public function academyTeacher()
     {
