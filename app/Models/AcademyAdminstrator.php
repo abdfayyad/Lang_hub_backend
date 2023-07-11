@@ -10,9 +10,16 @@ class AcademyAdminstrator extends Model
     use HasFactory;
     protected $table = 'academy_adminstrators';
     protected $fillable = [
-        'name', 'user_id'
+        'first_name', 'user_id' , 'last_name' , 'phone_number' , 'photo' 
     ];
     public function user() {
         return $this->belongsTo(User::class);
+    }
+    public function AcademyPending(){
+        return $this->hasOne(AcademyPending::class) ;
+    }
+    //new modefy 
+    public function academy(){
+        return $this->hasMany(Academy::class);
     }
 }

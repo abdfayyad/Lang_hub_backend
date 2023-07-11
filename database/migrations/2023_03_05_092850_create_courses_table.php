@@ -21,6 +21,7 @@ class CreateCoursesTable extends Migration
             $table->text('course_image')->nullable();
             $table->integer('seats')->default(0);
             $table->string('description');
+            $table->boolean('hasExam')->default(false);
             $table->boolean('active')->default(false);//0 mean not published yet
             $table->date('start_time');
             $table->date('end_time');

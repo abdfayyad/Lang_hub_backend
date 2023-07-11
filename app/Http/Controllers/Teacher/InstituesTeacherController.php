@@ -25,7 +25,7 @@ class InstituesTeacherController extends Controller
         ]);
     }
 
-    public function store($id, Request $request) {
+    public function store(Academy $id, Request $request) {
         $t_id = Teacher::where('user_id', auth()->id())->first();
         $condition = AcademyTeacher::where('teacher_id', $t_id->id)
         ->where('approved', 0)

@@ -10,7 +10,7 @@ class AcademyPhoto extends Model
     use HasFactory;
     protected $table = 'academy_photos';
     protected $fillable = [
-        'image', 'academy_id'
+        'image', 'academy_pending_id'
     ];
 
     public function academy()

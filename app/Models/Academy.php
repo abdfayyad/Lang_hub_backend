@@ -9,6 +9,7 @@ use App\Models\AcademyPhoto;
 use App\Models\AcademyTeacher;
 use App\Models\Course;
 use App\Models\FeedBack;
+
 class Academy extends Model
 {
     use HasFactory;
@@ -16,30 +17,44 @@ class Academy extends Model
 
     protected $fillable = [
         'name', 'description', 'approved', 'location', 'license_number',
-        'adminstrator_id' , 'image'
+        'academy_adminstrator_id', 'english', 'french', 'spanish', 'germany'
     ];
-    public function rate(){
+    public function rate()
+    {
         return $this->belongsTo(Rate::class);
     }
-    public function offers() {
+    public function offers()
+    {
         return $this->hasMany(Offer::class);
     }
-    public function photos() {
+    public function photos()
+    {
         return $this->hasMany(AcademyPhoto::class);
     }
-    public function courses() {
+    public function courses()
+    {
         return $this->hasMany(Course::class);
     }
-    public function teachers() {
-        return $this->hasMany(AcademyTeacher::class);
+    //edit 
+    public function teachers()
+    {
+        return $this->belongsToMany(Teacher::class);
     }
-    public function students(){
+    public function students()
+    {
         return $this->belongsToMany(Student::class);
     }
-    public function feedbacks() {
+    public function feedbacks()
+    {
         return $this->hasMany(FeedBack::class);
     }
-    public function Notification(){
-        return $this->hasOne(AcademyNotification::class) ;
+    public function Notification()
+    {
+        return $this->hasOne(AcademyNotification::class);
+    }
+    //new modefy 
+    public function admin()
+    {
+        return $this->belongsTo(AcademyAdminstrator::class);
     }
 }

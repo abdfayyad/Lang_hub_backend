@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\AcademyAdmin\AcademyAdminCourseController;
+use App\Http\Controllers\AcademyAdmin\AcademyAdminExamController;
+use App\Http\Controllers\AcademyAdmin\AcademyAdminProfilecontroller;
+use App\Http\Controllers\AcademyAdmin\AcademyAdminStudentController;
+use App\Http\Controllers\AcademyAdmin\AcademyAdminTeacherController;
+use App\Http\Controllers\AcademyAdmin\AuthAcademyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -22,6 +28,7 @@ use App\Http\Controllers\Student\OfferStudentController;
 use App\Http\Controllers\Student\RateController;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SuperAdmin\RequestMangeController;
 use App\Models\OfferStudent;
 
 /*
@@ -40,15 +47,50 @@ use App\Models\OfferStudent;
 
 Route::post('student/register',[AuthStudentController::class, 'register']);
 Route::post('teacher/register',[AuthTeacherController::class, 'register']);
+Route::post('academy-admin/register',[AuthAcademyController::class, 'register']);
 
 Route::post('/login',[LoginController::class,'login']);
 
+
 Route::group(['prefix' => 'super-admin', 'middleware' => ['auth:sanctum','superAdmin']], function () {
-    Route::get('/profile', [HomeTeacherController::class, 'index']);
-});
+    Route::get('accept-academy/{academyPending}' , [RequestMangeController::class , 'acceptAcademy'] );
+    Route::get('reject-academy/{academyPending}' , [RequestMangeController::class , 'rejectrequest'] );
+});//dont 
 
 Route::group(['prefix' => 'academy-admin', 'middleware' => ['auth:sanctum','academyAdmin']], function () {
     Route::get('/', [HomeTeacherController::class, 'index']);
+    Route::group(['prefix' => 'profile'], function() {
+        Route::get('/', [AcademyAdminProfilecontroller::class, 'show']);
+        Route::post('/update', [AcademyAdminProfilecontroller::class, 'update']);
+        Route::post('change-password' , [AcademyAdminProfilecontroller::class , 'changePassword']);
+    });
+    Route::group(['prefix' => 'courses'], function() {
+        Route::post('/{course}/add-schedule', [AcademyAdminCourseController::class, 'addCourseSchedule']);
+        Route::post('/{course}/update', [AcademyAdminCourseController::class, 'update']);
+        Route::post('/', [AcademyAdminCourseController::class, 'store']);
+    });
+    Route::group(['prefix' => 'teachers'], function() {
+        Route::get('/' , [AcademyAdminTeacherController::class,'index'] );
+        Route::get('/requests' , [AcademyAdminTeacherController::class,'showTeacherRequests'] );
+        Route::get('/accept-teacher/{teacher}' , [AcademyAdminTeacherController::class , 'acceptTeacher']);
+        Route::delete('/reject-teacher/{teacher}' , [AcademyAdminTeacherController::class , 'rejectTeacher']);
+    });
+    Route::group(['prefix' => 'students'], function() {
+        Route::get('/' , [AcademyAdminStudentController::class,'index'] );
+        Route::get('/requests' , [AcademyAdminStudentController::class,'showStudentRequests'] );
+        Route::get('/accept-student/{student}' , [AcademyAdminStudentController::class , 'acceptStudent']);
+        Route::delete('/reject-student/{student}' , [AcademyAdminStudentController::class , 'rejectStudent']);
+    });
+    Route::group(['prefix' => 'courses'], function() {
+        Route::get('/inactive' , [AcademyAdminCourseController::class,'inactiveCourses'] );
+        Route::get('/active' , [AcademyAdminCourseController::class,'activeCourses'] );
+        Route::get('/addStudentToCourse/{course}/{student}' ,[AcademyAdminStudentController::class , 
+        'addStudentToCourse']);
+    });
+    Route::group(['prefix' => 'exams'], function() {
+        Route::post('/addExam/{course}' , [AcademyAdminExamController::class , 'addExam']);
+        Route::delete('deleteExam/{course}' , [AcademyAdminExamController::class , 'deleteExam']);
+    });
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth:sanctum','teacher']], function () {

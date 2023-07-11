@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('academy_photos', function (Blueprint $table) {
             $table->id();
             $table->string('image');
-            $table->foreignId('academy_id')->constrained('academies')->cascadeOnDelete();
+            $table->foreignId('academy_pending_id')->constrained('academy_pendings')->cascadeOnDelete();
             $table->timestamps();
         });
     }

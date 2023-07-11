@@ -40,4 +40,7 @@ class Teacher extends Model
     public function offers(){
         return $this->hasMany(Offer::class);
     }
+    public function academies(){
+        return $this->belongsToMany(Academy::class) ;
+    }
 }
